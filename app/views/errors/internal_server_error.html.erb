@@ -1,0 +1,12 @@
+<% content_for :title, "Server Error (500)" %>
+
+<div class="mx-auto max-w-lg px-4 py-20 text-center">
+  <p class="text-6xl font-black text-rose-600 dark:text-rose-400">500</p>
+  <h1 class="mt-4 text-3xl font-extrabold text-slate-900 dark:text-white">Internal Server Error</h1>
+  <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+    Something went wrong on our end. The team has been notified and we are working to resolve it.
+  </p>
+  <div class="mt-6">
+    <%= link_to "Return Home", root_path, class: "rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-indigo-700" %>
+  </div>
+</div>

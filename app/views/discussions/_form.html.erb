@@ -1,0 +1,55 @@
+<%= form_with model: discussion, class: "space-y-6" do |f| %>
+  <% if discussion.errors.any? %>
+    <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-900/60 dark:bg-rose-950/40">
+      <h3 class="text-sm font-bold text-rose-800 dark:text-rose-200">Please correct the following errors:</h3>
+      <ul class="mt-2 list-disc list-inside text-xs text-rose-700 dark:text-rose-300 space-y-1">
+        <% discussion.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :title, "Discussion Title", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+    <%= f.text_field :title,
+                     placeholder: "What is your question or discussion topic? Be specific and clear.",
+                     required: true,
+                     class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :category_id, "Category", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+      <%= f.collection_select :category_id, Category.ordered, :id, :name, { prompt: "Select a Category" },
+                              { required: true, class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" } %>
+    </div>
+
+    <div>
+      <%= f.label :tag_names, "Tags (comma-separated)", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+      <%= f.text_field :tag_names,
+                       value: discussion.tag_names,
+                       placeholder: "e.g. ruby, rails, postgresql, authentication",
+                       class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+      <p class="mt-1 text-[11px] text-slate-400">Up to 5 tags, separated by commas.</p>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :body, "Details & Context", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+    <%= f.text_area :body,
+                    rows: 12,
+                    placeholder: "Provide thorough background details, what you have tried, code snippets, or error messages...\n\nUse Markdown for formatting: code blocks ```ruby, bold **text**, headings ##, etc.",
+                    required: true,
+                    class: "font-mono text-sm w-full rounded-xl border border-slate-200 bg-slate-50/50 p-4 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+    <p class="mt-1.5 text-xs text-slate-400">
+      Markdown syntax is supported. You can also mention team members using <span class="font-mono text-indigo-600 dark:text-indigo-400">@username</span>.
+    </p>
+  </div>
+
+  <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+    <%= link_to "Cancel", (discussion.persisted? ? discussion_path(discussion) : root_path), class: "px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white" %>
+    <%= f.submit (discussion.persisted? ? "Update Discussion" : "Publish Discussion"),
+                 class: "cursor-pointer rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 transition" %>
+  </div>
+<% end %>

@@ -1,0 +1,251 @@
+<% content_for :title, "#{@user.display_title} (@#{@user.username})" %>
+
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Profile Header Card -->
+  <div class="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900 mb-8">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+        <img src="<%= @user.avatar_display_url %>" alt="<%= @user.username %>" class="h-20 w-20 rounded-full object-cover ring-4 ring-indigo-50 dark:ring-indigo-950/40">
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white"><%= @user.display_title %></h1>
+            <span class="text-sm text-slate-400">@<%= @user.username %></span>
+            <% if @user.role != "user" %>
+              <span class="rounded-md bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-700/10 uppercase dark:bg-amber-950/40 dark:text-amber-400">
+                <%= @user.role %>
+              </span>
+            <% end %>
+            <% if @user.suspended? %>
+              <span class="rounded-md bg-rose-50 px-2 py-0.5 text-xs font-bold text-rose-700 ring-1 ring-inset ring-rose-700/10 uppercase dark:bg-rose-950/40 dark:text-rose-400">
+                Suspended
+              </span>
+            <% end %>
+          </div>
+
+          <% if @user.bio.present? %>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 max-w-xl">
+              <%= @user.bio %>
+            </p>
+          <% end %>
+
+          <div class="mt-3 flex flex-wrap items-center gap-4 text-xs text-slate-500">
+            <% if @user.location.present? %>
+              <span class="flex items-center gap-1">
+                <svg class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <%= @user.location %>
+              </span>
+            <% end %>
+
+            <% if @user.website.present? %>
+              <%= link_to @user.website, @user.website, target: "_blank", rel: "noopener noreferrer", class: "flex items-center gap-1 text-indigo-600 hover:underline" do %>
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                Website
+              <% end %>
+            <% end %>
+
+            <span class="flex items-center gap-1">
+              <svg class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Joined <%= @user.created_at.strftime("%B %Y") %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Actions (Edit if self / Moderate if moderator) -->
+      <div class="flex items-center gap-2 self-start">
+        <% if current_user == @user %>
+          <%= link_to edit_profile_path, class: "rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" do %>
+            Edit Profile
+          <% end %>
+        <% elsif current_user&.can_moderate? %>
+          <% if @user.suspended? %>
+            <%= button_to "Unsuspend User", unsuspend_admin_user_path(@user), method: :post, class: "rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700" %>
+          <% else %>
+            <%= button_to "Suspend User", suspend_admin_user_path(@user), method: :post, data: { turbo_confirm: "Are you sure you want to suspend @#{@user.username}?" }, class: "rounded-xl bg-rose-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-700" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Quick Stats Metric Counter -->
+    <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-100 dark:border-slate-800">
+      <div>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reputation</span>
+        <p class="text-xl font-black text-amber-600 dark:text-amber-400">⭐ <%= @user.reputation %></p>
+      </div>
+      <div>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Discussions</span>
+        <p class="text-xl font-bold text-slate-900 dark:text-white"><%= @user.discussions_count %></p>
+      </div>
+      <div>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Replies</span>
+        <p class="text-xl font-bold text-slate-900 dark:text-white"><%= @user.replies_count %></p>
+      </div>
+      <div>
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Badges</span>
+        <p class="text-xl font-bold text-indigo-600 dark:text-indigo-400"><%= @user.user_badges.count %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Navigation Tabs -->
+  <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-6 overflow-x-auto text-sm font-medium">
+    <%= link_to "Overview", user_profile_path(@user, tab: "overview"), class: "px-3 py-1.5 rounded-lg transition #{@tab == 'overview' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <%= link_to "Discussions (#{@user.discussions_count})", user_profile_path(@user, tab: "discussions"), class: "px-3 py-1.5 rounded-lg transition #{@tab == 'discussions' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <%= link_to "Replies (#{@user.replies_count})", user_profile_path(@user, tab: "replies"), class: "px-3 py-1.5 rounded-lg transition #{@tab == 'replies' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <%= link_to "Badges (#{@user.user_badges.count})", user_profile_path(@user, tab: "badges"), class: "px-3 py-1.5 rounded-lg transition #{@tab == 'badges' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <% if current_user == @user %>
+      <%= link_to "Bookmarks", user_profile_path(@user, tab: "bookmarks"), class: "px-3 py-1.5 rounded-lg transition #{@tab == 'bookmarks' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <% end %>
+  </div>
+
+  <!-- Tab Content -->
+  <div>
+    <% case @tab %>
+    <% when "discussions" %>
+      <div class="space-y-3">
+        <% if @discussions.any? %>
+          <% @discussions.each do |discussion| %>
+            <%= render "discussions/discussion_card", discussion: discussion %>
+          <% end %>
+          <div class="mt-6 flex justify-center">
+            <%= paginate @discussions %>
+          </div>
+        <% else %>
+          <%= render "shared/empty_state", title: "No discussions yet", message: "This user has not started any discussions." %>
+        <% end %>
+      </div>
+
+    <% when "replies" %>
+      <div class="space-y-4">
+        <% if @replies.any? %>
+          <% @replies.each do |reply| %>
+            <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <div class="text-xs text-slate-400 mb-2">
+                Replied on <%= link_to reply.discussion.title, discussion_path(reply.discussion), class: "font-semibold text-slate-700 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400" %>
+                • <%= time_ago_in_words(reply.created_at) %> ago
+              </div>
+              <div class="text-sm text-slate-700 dark:text-slate-300 prose dark:prose-invert max-w-none">
+                <%= render_markdown(reply.body) %>
+              </div>
+              <div class="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                <span><%= reply.vote_score %> votes</span>
+                <% if reply.is_accepted? %>
+                  <span class="text-emerald-600 font-bold">• Accepted Answer</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          <div class="mt-6 flex justify-center">
+            <%= paginate @replies %>
+          </div>
+        <% else %>
+          <%= render "shared/empty_state", title: "No replies yet", message: "This user has not authored any replies." %>
+        <% end %>
+      </div>
+
+    <% when "badges" %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <% if @user_badges.any? %>
+          <% @user_badges.each do |ub| %>
+            <div class="flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 text-xl font-bold dark:bg-indigo-950/40 dark:text-indigo-400">
+                🏆
+              </div>
+              <div>
+                <h4 class="font-bold text-sm text-slate-900 dark:text-white"><%= ub.badge.name %></h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400"><%= ub.badge.description %></p>
+                <p class="text-[10px] text-slate-400 mt-1">Awarded <%= ub.awarded_at.strftime("%b %d, %Y") %></p>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="col-span-full">
+            <%= render "shared/empty_state", title: "No badges earned yet", message: "Participate in discussions to unlock community badges." %>
+          </div>
+        <% end %>
+      </div>
+
+    <% when "bookmarks" %>
+      <div class="space-y-3">
+        <% if @bookmarks.any? %>
+          <% @bookmarks.each do |discussion| %>
+            <%= render "discussions/discussion_card", discussion: discussion %>
+          <% end %>
+          <div class="mt-6 flex justify-center">
+            <%= paginate @bookmarks %>
+          </div>
+        <% else %>
+          <%= render "shared/empty_state", title: "No bookmarks yet", message: "Click the bookmark icon on any discussion to save it here." %>
+        <% end %>
+      </div>
+
+    <% else %>
+      <!-- Overview Tab -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3">Recent Discussions</h3>
+            <% if @recent_discussions.any? %>
+              <div class="space-y-3">
+                <% @recent_discussions.each do |disc| %>
+                  <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                    <h4 class="font-bold text-sm text-slate-900 dark:text-white">
+                      <%= link_to disc.title, discussion_path(disc), class: "hover:text-indigo-600" %>
+                    </h4>
+                    <div class="mt-2 flex items-center gap-3 text-xs text-slate-400">
+                      <span><%= disc.category.name %></span>
+                      <span>•</span>
+                      <span><%= pluralize(disc.reply_count, "reply") %></span>
+                      <span>•</span>
+                      <span><%= disc.vote_score %> votes</span>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-xs text-slate-400">No discussions posted yet.</p>
+            <% end %>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3">Recent Replies</h3>
+            <% if @recent_replies.any? %>
+              <div class="space-y-3">
+                <% @recent_replies.each do |rep| %>
+                  <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                    <p class="text-xs text-slate-400 mb-1">
+                      On: <%= link_to rep.discussion.title, discussion_path(rep.discussion), class: "font-semibold text-slate-700 hover:text-indigo-600 dark:text-slate-300" %>
+                    </p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2"><%= rep.body %></p>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-xs text-slate-400">No replies written yet.</p>
+            <% end %>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-3">Earned Badges</h3>
+          <div class="space-y-2">
+            <% if @badges.any? %>
+              <% @badges.each do |badge| %>
+                <div class="flex items-center gap-3 p-3 rounded-xl border border-slate-100 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900">
+                  <span class="text-lg">🏅</span>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900 dark:text-white"><%= badge.name %></p>
+                    <p class="text-[11px] text-slate-400"><%= badge.description %></p>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <p class="text-xs text-slate-400">No badges earned yet.</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<% is_subscribed = local_assigns[:is_subscribed] || (current_user ? current_user.subscribed?(discussion) : false) %>
+
+<div id="<%= dom_id(discussion, :subscribe_btn) %>" class="inline-block">
+  <% if user_signed_in? %>
+    <%= button_to subscribe_discussion_path(discussion),
+                  method: :post,
+                  class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition #{is_subscribed ? 'border-indigo-300 bg-indigo-50 text-indigo-800 dark:bg-indigo-950/40 dark:border-indigo-800 dark:text-indigo-300' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'}" do %>
+      <svg class="h-4 w-4 <%= is_subscribed ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400' %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+      </svg>
+      <span><%= is_subscribed ? "Following" : "Follow" %></span>
+      <span class="ml-1 text-[11px] opacity-75">(<%= discussion.subscriptions.count %>)</span>
+    <% end %>
+  <% else %>
+    <%= link_to new_user_session_path, class: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 transition" do %>
+      <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+      </svg>
+      <span>Follow</span>
+      <span class="ml-1 text-[11px] opacity-75">(<%= discussion.subscriptions.count %>)</span>
+    <% end %>
+  <% end %>
+</div>

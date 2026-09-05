@@ -1,0 +1,23 @@
+<% if @reply.parent_reply_id.present? %>
+  <%= turbo_stream.append dom_id(@reply.parent_reply) do %>
+    <%= render "replies/reply", reply: @reply, discussion: @discussion %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.append "replies-list" do %>
+    <%= render "replies/reply", reply: @reply, discussion: @discussion %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "reply-form" do %>
+  <%= render "replies/form", discussion: @discussion, reply: @discussion.replies.build %>
+<% end %>
+
+<%= turbo_stream.replace "replies-count" do %>
+  <span id="replies-count" class="text-sm font-bold text-slate-900 dark:text-white">
+    <%= pluralize(@discussion.reload.reply_count, "Reply") %>
+  </span>
+<% end %>
+
+<%= turbo_stream.replace "flash-container" do %>
+  <%= render "shared/flash", notice: "Reply posted successfully!" %>
+<% end %>

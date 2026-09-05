@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full dark antialiased">
+  <head>
+    <title><%= content_for(:title) ? "#{yield(:title)} | ForumX" : "ForumX — Engineering Discussions & Verified Knowledge" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= content_for(:description) || 'ForumX is a high-performance, modern online discussion and engineering community platform built with Ruby on Rails 8.' %>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ForumX">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#09090b">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <!-- Modern Typography: Plus Jakarta Sans + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-full flex flex-col bg-[#09090b] text-zinc-100 selection:bg-indigo-500/30 selection:text-indigo-200 antialiased relative overflow-x-hidden">
+    <!-- Screen Start Preloader (Aceternity / Uiverse Inspired) -->
+    <div id="initial-screen-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#09090b] transition-all duration-500 ease-out">
+      <div class="fixed inset-0 bg-grid-dots pointer-events-none opacity-30"></div>
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 bg-radial-spotlight pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col items-center">
+        <!-- Glowing Orbiting Rings / Emblem -->
+        <div class="relative flex items-center justify-center mb-6">
+          <div class="absolute -inset-4 rounded-full bg-linear-to-tr from-indigo-500/25 via-purple-500/25 to-pink-500/25 blur-xl animate-pulse"></div>
+          
+          <div class="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-900/90 border border-white/10 shadow-2xl backdrop-blur-xl">
+            <!-- Neon Spinning Ring -->
+            <svg class="animate-spin h-9 w-9 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-15" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+              <path class="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-black text-xs font-mono text-white tracking-wider">FX</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typography & Progress indicator -->
+        <div class="text-center space-y-3">
+          <div class="flex items-center justify-center gap-2">
+            <span class="font-black text-xl tracking-tight text-white">FORUM<span class="text-indigo-400">X</span></span>
+            <span class="h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+          </div>
+          
+          <div class="w-32 h-1 rounded-full bg-zinc-800/80 overflow-hidden relative border border-white/5 mx-auto">
+            <div class="absolute inset-0 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 animate-[shimmer_1.2s_infinite]"></div>
+          </div>
+          <p class="text-[11px] font-mono text-zinc-500 tracking-wider uppercase">Loading experience...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Page Navigation Loader (Aceternity / Uiverse Inspired) -->
+    <div id="global-page-loader" class="fixed top-0 left-0 right-0 z-50 pointer-events-none opacity-0 transition-opacity duration-200">
+      <div class="h-0.75 w-full bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-[0_0_15px_rgba(168,85,247,0.9)] animate-pulse"></div>
+      <div class="absolute top-4 right-4 flex items-center gap-2 rounded-full bg-zinc-900/95 border border-white/15 px-3 py-1 text-xs font-mono text-indigo-300 shadow-2xl backdrop-blur-xl">
+        <svg class="animate-spin h-3.5 w-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span>Processing...</span>
+      </div>
+    </div>
+
+    <!-- Ambient Canvas Grid & Background Atmosphere -->
+    <div class="fixed inset-0 bg-grid-dots pointer-events-none z-0 opacity-40"></div>
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-250 h-100 bg-radial-spotlight pointer-events-none z-0"></div>
+
+    <div class="relative z-10 flex min-h-full flex-col flex-1">
+      <%= render "shared/navbar" %>
+      <%= render "shared/flash" %>
+
+      <main class="flex-1">
+        <%= yield %>
+      </main>
+
+      <%= render "shared/footer" %>
+    </div>
+  </body>
+</html>

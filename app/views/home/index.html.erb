@@ -1,0 +1,200 @@
+<% content_for :title, "Engineering Discussions & Knowledge" %>
+
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Aceternity-Inspired Ambient Hero Section -->
+  <section class="relative overflow-hidden rounded-3xl border border-white/8 bg-zinc-900/40 backdrop-blur-2xl px-6 py-14 sm:px-12 sm:py-20 text-white shadow-2xl mb-12">
+    <!-- Inner Ambient Radial Glow -->
+    <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-150 h-75 bg-linear-to-b from-indigo-500/20 via-purple-500/10 to-transparent blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-3xl">
+      <!-- Live Status Pill -->
+      <div class="inline-flex items-center gap-2.5 rounded-full bg-indigo-500/10 px-3.5 py-1 text-xs font-semibold text-indigo-300 border border-indigo-500/20 backdrop-blur-md mb-6">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+        </span>
+        <span class="tracking-wide uppercase text-[11px] font-bold">Developer Community Platform</span>
+        <span class="text-indigo-500/60">•</span>
+        <span class="text-zinc-300 font-normal">Rails 8 Native</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1] mb-5">
+        Engineering Discussions & <span class="text-transparent bg-clip-text bg-linear-to-r from-indigo-300 via-purple-300 to-pink-300">Verified Knowledge</span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-2xl mb-8">
+        A high-performance discussion forum for software architects, systems builders, and open-source contributors. Ask complex questions, debate technical trade-offs, and reward accepted solutions.
+      </p>
+
+      <!-- Search & CTA Actions -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 max-w-xl">
+        <%= form_with url: search_path, method: :get, class: "relative flex-1 group", local: true do |f| %>
+          <div class="relative flex items-center">
+            <svg class="absolute left-3.5 h-4 w-4 text-zinc-500 group-focus-within:text-indigo-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <%= f.text_field :q, placeholder: "Search PostgreSQL full-text index...", class: "w-full rounded-xl border border-white/10 bg-zinc-950/80 py-3 pl-10 pr-16 text-sm text-white placeholder-zinc-500 focus:border-indigo-500/60 focus:bg-zinc-950 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 transition backdrop-blur-md" %>
+            <div class="absolute right-3 flex items-center pointer-events-none">
+              <span class="text-[11px] font-mono text-zinc-500 border border-white/10 px-1.5 py-0.5 rounded bg-zinc-900">↵ Enter</span>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="glow-border-wrapper rounded-xl shrink-0">
+          <%= link_to new_discussion_path, class: "relative z-10 inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-950 px-5 py-3 text-sm font-bold text-white border border-white/15 hover:bg-zinc-900 transition" do %>
+            <svg class="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            <span>Start Discussion</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics Row (Glass Cards) -->
+  <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+    <div class="card-glass rounded-2xl p-5">
+      <p class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Total Members</p>
+      <p class="mt-1.5 text-2xl sm:text-3xl font-extrabold text-white tracking-tight"><%= number_with_delimiter(@stats[:total_users]) %></p>
+      <p class="mt-1 text-xs text-emerald-400 flex items-center gap-1 font-medium">
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Active community
+      </p>
+    </div>
+
+    <div class="card-glass rounded-2xl p-5">
+      <p class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Discussions</p>
+      <p class="mt-1.5 text-2xl sm:text-3xl font-extrabold text-white tracking-tight"><%= number_with_delimiter(@stats[:total_discussions]) %></p>
+      <p class="mt-1 text-xs text-indigo-400 flex items-center gap-1 font-medium">
+        <span class="h-1.5 w-1.5 rounded-full bg-indigo-400"></span> Threads indexed
+      </p>
+    </div>
+
+    <div class="card-glass rounded-2xl p-5">
+      <p class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Replies & Solutions</p>
+      <p class="mt-1.5 text-2xl sm:text-3xl font-extrabold text-white tracking-tight"><%= number_with_delimiter(@stats[:total_replies]) %></p>
+      <p class="mt-1 text-xs text-purple-400 flex items-center gap-1 font-medium">
+        <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span> Peer answers
+      </p>
+    </div>
+
+    <div class="card-glass rounded-2xl p-5">
+      <p class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Active This Week</p>
+      <p class="mt-1.5 text-2xl sm:text-3xl font-extrabold text-white tracking-tight"><%= number_with_delimiter(@stats[:active_users]) %></p>
+      <p class="mt-1 text-xs text-emerald-400 flex items-center gap-1 font-medium">
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Live contributors
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Primary Left Column: Discussions -->
+    <div class="lg:col-span-2 space-y-10">
+      <!-- Trending Section -->
+      <div>
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-white/8">
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Trending Discussions</h2>
+          </div>
+          <%= link_to "View all →", discussions_path(sort: "trending"), class: "text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition" %>
+        </div>
+
+        <div class="space-y-3">
+          <% if @trending_discussions.any? %>
+            <% @trending_discussions.each do |discussion| %>
+              <%= render "discussions/discussion_card", discussion: discussion %>
+            <% end %>
+          <% else %>
+            <%= render "shared/empty_state", title: "No trending discussions yet", message: "Be the first to start a conversation!" %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Latest Activity Section -->
+      <div>
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-white/8">
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-white tracking-tight">Latest Activity</h2>
+          </div>
+          <%= link_to "View all →", discussions_path(sort: "latest"), class: "text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition" %>
+        </div>
+
+        <div class="space-y-3">
+          <% if @latest_discussions.any? %>
+            <% @latest_discussions.each do |discussion| %>
+              <%= render "discussions/discussion_card", discussion: discussion %>
+            <% end %>
+          <% else %>
+            <%= render "shared/empty_state", title: "No discussions yet", message: "Start a conversation to see it listed here." %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Right Column: Sidebar -->
+    <div class="space-y-6">
+      <!-- Popular Categories Widget -->
+      <div class="card-glass rounded-2xl p-5">
+        <div class="flex items-center justify-between pb-3 border-b border-white/8">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-zinc-400">Topic Categories</h3>
+          <%= link_to "All Categories", categories_path, class: "text-xs font-semibold text-indigo-400 hover:underline" %>
+        </div>
+
+        <div class="mt-4 space-y-1.5">
+          <% @popular_categories.each do |category| %>
+            <%= link_to category_path(category), class: "flex items-center justify-between p-2.5 rounded-xl hover:bg-white/[0.05] transition group border border-transparent hover:border-white/5" do %>
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="h-2 w-2 rounded-full shrink-0" style="background-color: <%= category.color_accent %>; box-shadow: 0 0 8px <%= category.color_accent %>80;"></span>
+                <span class="text-xs font-semibold text-zinc-300 group-hover:text-white transition truncate"><%= category.name %></span>
+              </div>
+              <span class="text-[11px] font-mono font-medium text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded-md border border-white/5"><%= category.discussions_count %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Top Contributors Widget -->
+      <div class="card-glass rounded-2xl p-5">
+        <div class="flex items-center justify-between pb-3 border-b border-white/8">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-zinc-400">Top Contributors</h3>
+          <span class="text-[11px] font-mono text-zinc-500">Reputation</span>
+        </div>
+
+        <div class="mt-4 space-y-2.5">
+          <% @top_contributors.each_with_index do |user, idx| %>
+            <%= link_to user_profile_path(user), class: "flex items-center justify-between p-2 rounded-xl hover:bg-white/[0.05] transition group border border-transparent hover:border-white/5" do %>
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="font-mono text-[11px] font-bold text-zinc-500 w-4">#<%= idx + 1 %></span>
+                <img src="<%= user.avatar_display_url %>" alt="<%= user.username %>" class="h-7 w-7 rounded-full object-cover border border-white/10">
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-zinc-200 group-hover:text-white transition truncate">@<%= user.username %></p>
+                  <p class="text-[10px] text-zinc-500"><%= pluralize(user.discussions_count + user.replies_count, "contribution") %></p>
+                </div>
+              </div>
+              <span class="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-400 border border-amber-500/20 font-mono">
+                ⭐ <%= user.reputation %>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Engineering Guidelines Card -->
+      <div class="rounded-2xl border border-indigo-500/20 bg-linear-to-br from-indigo-950/40 via-zinc-900/60 to-zinc-950 p-5 backdrop-blur-xl">
+        <h3 class="font-bold text-xs uppercase tracking-wider text-indigo-300 flex items-center gap-2">
+          <svg class="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          <span>Community Standards</span>
+        </h3>
+        <p class="mt-2 text-xs text-zinc-400 leading-relaxed">
+          ForumX is crafted for respectful, rigorous technical exchanges. Share reproducible code snippets, provide constructive feedback, and award verified solution badges.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

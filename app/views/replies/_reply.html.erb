@@ -1,0 +1,123 @@
+<%# locals: reply, discussion %>
+<% depth = [reply.depth, 3].min %>
+<% is_op = reply.user_id == discussion.user_id %>
+<% is_accepted = reply.is_accepted? %>
+<% is_discussion_author = current_user && current_user.id == discussion.user_id %>
+
+<div id="<%= dom_id(reply) %>"
+     data-controller="reply-collapse nested-reply"
+     class="group/reply relative transition-all duration-200 <%= depth > 0 ? "ml-3 sm:ml-6 border-l-2 border-white/10 pl-3 sm:pl-5" : "" %> <%= is_accepted ? "p-4 sm:p-5 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 shadow-[0_0_20px_rgba(16,185,129,0.08)] my-4" : "py-3" %>">
+
+  <!-- Reply Header -->
+  <div class="flex items-center justify-between text-xs mb-2">
+    <div class="flex items-center gap-2">
+      <!-- Collapse toggle button -->
+      <button type="button"
+              data-action="click->reply-collapse#toggle"
+              data-reply-collapse-target="toggleBtn"
+              class="text-zinc-500 hover:text-zinc-200 font-mono text-[11px] p-0.5 rounded transition"
+              aria-expanded="true"
+              title="Collapse thread">
+        <span data-reply-collapse-target="indicator">[-]</span>
+      </button>
+
+      <!-- Author avatar -->
+      <img src="<%= reply.user.avatar_display_url %>" alt="<%= reply.user.username %>" class="h-6 w-6 rounded-full object-cover border border-white/10">
+
+      <!-- Author username -->
+      <%= link_to user_profile_path(reply.user), class: "font-bold text-zinc-200 hover:text-indigo-300 transition" do %>
+        @<%= reply.user.username %>
+      <% end %>
+
+      <!-- OP Badge -->
+      <% if is_op %>
+        <span class="rounded bg-indigo-500/10 px-1.5 py-0.2 text-[10px] font-bold text-indigo-400 border border-indigo-500/20">OP</span>
+      <% end %>
+
+      <!-- Role Badge -->
+      <% if reply.user.can_moderate? %>
+        <span class="rounded bg-amber-500/10 px-1.5 py-0.2 text-[10px] font-bold text-amber-400 border border-amber-500/20 uppercase"><%= reply.user.role %></span>
+      <% end %>
+
+      <!-- Accepted Answer Badge -->
+      <% if is_accepted %>
+        <span class="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-bold text-emerald-400 border border-emerald-500/30">
+          <svg class="h-3.5 w-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          Accepted Answer
+        </span>
+      <% end %>
+
+      <span class="text-zinc-600">•</span>
+      <span class="text-zinc-500"><%= time_ago_in_words(reply.created_at) %> ago</span>
+    </div>
+
+    <!-- Actions menu: Accept answer -->
+    <div class="flex items-center gap-2">
+      <% if is_discussion_author %>
+        <%= button_to accept_discussion_reply_path(discussion, reply),
+                      method: :post,
+                      class: "inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition #{is_accepted ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20'}",
+                      title: is_accepted ? "Click to unaccept answer" : "Mark this reply as accepted solution" do %>
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <span><%= is_accepted ? "Accepted" : "Mark as Solved" %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Collapsible Content Wrapper -->
+  <div data-reply-collapse-target="content">
+    <!-- Reply Body -->
+    <div class="text-sm text-zinc-200 prose dark:prose-invert max-w-none ml-5 sm:ml-7 mb-2 leading-relaxed">
+      <%= render_markdown(reply.body) %>
+    </div>
+
+    <!-- Action bar: Vote controls & Reply & Delete & Report -->
+    <div class="flex items-center gap-4 text-xs ml-5 sm:ml-7 pt-1">
+      <div class="flex items-center gap-1">
+        <%= render "discussions/vote_controls", voteable: reply %>
+      </div>
+
+      <% if user_signed_in? && !discussion.locked? && !discussion.archived? %>
+        <button type="button"
+                data-action="click->nested-reply#toggle"
+                class="flex items-center gap-1 font-semibold text-zinc-400 hover:text-indigo-400 transition">
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+          </svg>
+          <span>Reply</span>
+        </button>
+      <% end %>
+
+      <% if policy(reply).destroy? %>
+        <%= button_to [discussion, reply],
+                      method: :delete,
+                      data: { turbo_confirm: "Delete this reply?" },
+                      class: "font-medium text-zinc-500 hover:text-rose-400 transition" do %>
+          Delete
+        <% end %>
+      <% end %>
+
+      <% if user_signed_in? && current_user.id != reply.user_id %>
+        <%= link_to new_report_path(reportable_type: "Reply", reportable_id: reply.id),
+                    class: "font-medium text-zinc-500 hover:text-amber-400 transition" do %>
+          Report
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Inline Nested Reply Composer -->
+    <div data-nested-reply-target="form" class="hidden mt-3 ml-5 sm:ml-7">
+      <%= render "replies/form", discussion: discussion, reply: Reply.new, parent_reply_id: reply.id %>
+    </div>
+
+    <!-- Nested Child Replies -->
+    <% if reply.child_replies.any? %>
+      <div class="mt-3 space-y-2">
+        <% reply.child_replies.visible_only.chronological.each do |child_reply| %>
+          <%= render "replies/reply", reply: child_reply, discussion: discussion %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

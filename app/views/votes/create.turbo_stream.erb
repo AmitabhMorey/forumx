@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@voteable, :votes) do %>
+  <%= render "discussions/vote_controls", voteable: @voteable %>
+<% end %>

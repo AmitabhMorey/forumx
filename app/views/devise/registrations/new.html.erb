@@ -1,0 +1,59 @@
+<% content_for :title, "Create Account" %>
+
+<div class="mx-auto max-w-md px-4 py-16 sm:py-20">
+  <div class="card-glass relative overflow-hidden rounded-3xl p-8 sm:p-10 border border-white/10 shadow-2xl">
+    <!-- Top Gradient Accent Line -->
+    <div class="absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-purple-500 to-transparent"></div>
+
+    <div class="text-center mb-8">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-900 border border-white/15 text-purple-400 shadow-inner mb-3">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Join ForumX</h1>
+      <p class="mt-1.5 text-xs sm:text-sm text-zinc-400">Create your engineering community developer account</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-4" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div>
+        <%= f.label :username, "Username", class: "block text-xs font-mono font-semibold text-zinc-300 mb-1.5" %>
+        <%= f.text_field :username, autofocus: true, autocomplete: "username", required: true, placeholder: "e.g. dev_alex", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-purple-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-purple-500/40 transition" %>
+        <p class="mt-1 text-[11px] font-mono text-zinc-500">Unique handle for @mentions and profile URL.</p>
+      </div>
+
+      <div>
+        <%= f.label :display_name, "Display Name (Optional)", class: "block text-xs font-mono font-semibold text-zinc-300 mb-1.5" %>
+        <%= f.text_field :display_name, placeholder: "e.g. Alex Chen", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-purple-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-purple-500/40 transition" %>
+      </div>
+
+      <div>
+        <%= f.label :email, "Email Address", class: "block text-xs font-mono font-semibold text-zinc-300 mb-1.5" %>
+        <%= f.email_field :email, autocomplete: "email", required: true, placeholder: "alex@example.com", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-purple-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-purple-500/40 transition" %>
+      </div>
+
+      <div>
+        <%= f.label :password, "Password", class: "block text-xs font-mono font-semibold text-zinc-300 mb-1.5" %>
+        <%= f.password_field :password, autocomplete: "new-password", required: true, placeholder: "•••••••••••• (min 6 chars)", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-purple-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-purple-500/40 transition" %>
+      </div>
+
+      <div>
+        <%= f.label :password_confirmation, "Confirm Password", class: "block text-xs font-mono font-semibold text-zinc-300 mb-1.5" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, placeholder: "••••••••••••", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-purple-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-purple-500/40 transition" %>
+      </div>
+
+      <div class="pt-2">
+        <div class="glow-border-wrapper w-full rounded-xl">
+          <%= f.submit "Create Developer Account", class: "relative z-10 w-full cursor-pointer rounded-xl bg-zinc-950 py-3 text-sm font-bold text-white border border-white/15 hover:bg-zinc-900 transition flex items-center justify-center gap-2 shadow-lg" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-8 pt-6 border-t border-white/8 text-center text-xs text-zinc-400">
+      Already have an account?
+      <%= link_to "Sign In →", new_session_path(resource_name), class: "font-bold text-purple-400 hover:text-purple-300 ml-1 transition" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<% content_for :title, "Report Content" %>
+
+<div class="mx-auto max-w-xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Report Content</h1>
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Help our moderation team keep ForumX safe and respectful.</p>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="mb-4 rounded-xl bg-slate-50 dark:bg-slate-800 p-3 text-xs text-slate-600 dark:text-slate-300">
+      <span class="font-bold">Reporting:</span> <%= @reportable.class.name %>
+      <% if @reportable.respond_to?(:title) %>
+        - "<%= @reportable.title %>"
+      <% end %>
+    </div>
+
+    <%= form_with model: @report, url: reports_path, class: "space-y-4" do |f| %>
+      <%= hidden_field_tag :reportable_type, @reportable.class.name %>
+      <%= hidden_field_tag :reportable_id, @reportable.id %>
+
+      <div>
+        <%= f.label :reason, "Select Violation Reason", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+        <%= f.select :reason, Report::REASONS, { prompt: "Choose a reason..." }, required: true, class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 p-2.5 text-sm text-slate-900 focus:border-indigo-500 dark:border-slate-800 dark:bg-slate-800 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :description, "Additional Context (Optional)", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+        <%= f.text_area :description, rows: 4, placeholder: "Provide specific details or timestamps to assist moderators...", class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 dark:border-slate-800 dark:bg-slate-800 dark:text-white" %>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <%= link_to "Cancel", :back, class: "px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400" %>
+        <%= f.submit "Submit Report", class: "cursor-pointer rounded-xl bg-rose-600 px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-rose-700 transition" %>
+      </div>
+    <% end %>
+  </div>
+</div>

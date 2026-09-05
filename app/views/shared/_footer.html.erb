@@ -1,0 +1,51 @@
+<footer class="border-t border-white/8 bg-[#09090b]/90 backdrop-blur-xl mt-24">
+  <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3">
+          <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900 border border-white/10 text-indigo-400">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <span class="font-extrabold text-lg tracking-tight text-white">FORUM<span class="text-indigo-400">X</span></span>
+        </div>
+        <p class="mt-3.5 text-xs sm:text-sm text-zinc-400 max-w-sm leading-relaxed">
+          High-performance online discussion and engineering community platform built from scratch with Ruby on Rails 8, PostgreSQL, and Hotwire.
+        </p>
+        <p class="mt-3 text-[11px] font-mono text-zinc-500">
+          Academic Capstone Project • Production Ready • Zero Docker
+        </p>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Explore</h3>
+        <ul class="mt-3.5 space-y-2 text-xs font-medium text-zinc-400">
+          <li><%= link_to "Live Feed", root_path, class: "hover:text-white transition" %></li>
+          <li><%= link_to "All Discussions", discussions_path, class: "hover:text-white transition" %></li>
+          <li><%= link_to "Categories", categories_path, class: "hover:text-white transition" %></li>
+          <li><%= link_to "Full-Text Search", search_path, class: "hover:text-white transition" %></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">Community</h3>
+        <ul class="mt-3.5 space-y-2 text-xs font-medium text-zinc-400">
+          <% if user_signed_in? %>
+            <li><%= link_to "Dashboard", dashboard_path, class: "hover:text-white transition" %></li>
+            <li><%= link_to "My Bookmarks", bookmarks_path, class: "hover:text-white transition" %></li>
+            <li><%= link_to "Account Settings", edit_user_registration_path, class: "hover:text-white transition" %></li>
+          <% else %>
+            <li><%= link_to "Sign In", new_user_session_path, class: "hover:text-white transition" %></li>
+            <li><%= link_to "Create Account", new_user_registration_path, class: "hover:text-white transition" %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-white/6 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 font-mono">
+      <p>© <%= Time.current.year %> ForumX Platform. Engineered with Ruby on Rails 8.</p>
+      <p class="mt-2 sm:mt-0">GitHub-ready • Render Deployable • PostgreSQL GIN FTS</p>
+    </div>
+  </div>
+</footer>

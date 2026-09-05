@@ -1,0 +1,81 @@
+<% content_for :title, "Sign In" %>
+
+<div class="mx-auto max-w-md px-4 py-16 sm:py-24">
+  <!-- Aceternity-style Auth Card -->
+  <div class="card-glass relative overflow-hidden rounded-3xl p-8 sm:p-10 border border-white/10 shadow-2xl">
+    <!-- Top Gradient Accent Line -->
+    <div class="absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-indigo-500 to-transparent"></div>
+
+    <!-- Brand Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-900 border border-white/15 text-indigo-400 shadow-inner mb-3">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Welcome Back</h1>
+      <p class="mt-1.5 text-xs sm:text-sm text-zinc-400">Sign in to your ForumX developer account</p>
+    </div>
+
+    <!-- Quick Demo Account Fillers (For Easy Evaluation) -->
+    <div class="mb-6 p-3.5 rounded-2xl bg-zinc-950/70 border border-white/8">
+      <p class="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2">⚡ Quick 1-Click Demo Login:</p>
+      <div class="grid grid-cols-3 gap-1.5">
+        <button type="button" onclick="fillCredentials('admin@forumx.io', 'Password123!')" class="px-2 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-purple-500/50 hover:bg-zinc-800 text-[11px] font-mono text-purple-300 font-bold transition">
+          👑 Admin
+        </button>
+        <button type="button" onclick="fillCredentials('moderator@forumx.io', 'Password123!')" class="px-2 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-amber-500/50 hover:bg-zinc-800 text-[11px] font-mono text-amber-300 font-bold transition">
+          🛡️ Mod
+        </button>
+        <button type="button" onclick="fillCredentials('user@forumx.io', 'Password123!')" class="px-2 py-1.5 rounded-lg bg-zinc-900 border border-white/10 hover:border-indigo-500/50 hover:bg-zinc-800 text-[11px] font-mono text-indigo-300 font-bold transition">
+          👤 User
+        </button>
+      </div>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-4" }) do |f| %>
+      <div>
+        <%= f.label :email, "Email Address", class: "block text-xs font-mono font-semibold text-zinc-300 mb-1.5" %>
+        <%= f.email_field :email, id: "login_email", autofocus: true, autocomplete: "email", required: true, placeholder: "developer@forumx.io", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 transition" %>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <%= f.label :password, "Password", class: "block text-xs font-mono font-semibold text-zinc-300" %>
+          <%= link_to "Forgot?", new_password_path(resource_name), class: "text-xs font-medium text-indigo-400 hover:text-indigo-300" %>
+        </div>
+        <%= f.password_field :password, id: "login_password", autocomplete: "current-password", required: true, placeholder: "••••••••••••", class: "w-full rounded-xl border border-white/10 bg-zinc-900/90 px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:border-indigo-500/70 focus:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-indigo-500/40 transition" %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="flex items-center gap-2 pt-1">
+          <%= f.check_box :remember_me, class: "rounded border-white/20 bg-zinc-900 text-indigo-600 focus:ring-indigo-500/40" %>
+          <%= f.label :remember_me, "Remember session", class: "text-xs text-zinc-400 font-medium" %>
+        </div>
+      <% end %>
+
+      <div class="pt-2">
+        <div class="glow-border-wrapper w-full rounded-xl">
+          <%= f.submit "Sign In to ForumX", class: "relative z-10 w-full cursor-pointer rounded-xl bg-zinc-950 py-3 text-sm font-bold text-white border border-white/15 hover:bg-zinc-900 transition flex items-center justify-center gap-2 shadow-lg" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-8 pt-6 border-t border-white/8 text-center text-xs text-zinc-400">
+      Don't have an account yet?
+      <%= link_to "Create Account →", new_registration_path(resource_name), class: "font-bold text-indigo-400 hover:text-indigo-300 ml-1 transition" %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function fillCredentials(email, password) {
+    const emailField = document.getElementById("login_email");
+    const passField = document.getElementById("login_password");
+    if (emailField && passField) {
+      emailField.value = email;
+      passField.value = password;
+      emailField.focus();
+    }
+  }
+</script>

@@ -1,0 +1,23 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: forumx_development
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  username: <%= ENV.fetch("DB_USERNAME", nil) %>
+  password: <%= ENV.fetch("DB_PASSWORD", nil) %>
+
+test:
+  <<: *default
+  database: forumx_test
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  username: <%= ENV.fetch("DB_USERNAME", nil) %>
+  password: <%= ENV.fetch("DB_PASSWORD", nil) %>
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>

@@ -1,0 +1,58 @@
+<% content_for :title, "Edit Profile" %>
+
+<div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Edit Your Profile</h1>
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Update your public biography, location, and avatar details.</p>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <%= form_with model: @user, url: update_profile_path, method: :patch, class: "space-y-6" do |f| %>
+      <% if @user.errors.any? %>
+        <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-900/60 dark:bg-rose-950/40">
+          <ul class="list-disc list-inside text-xs text-rose-700 dark:text-rose-300">
+            <% @user.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= f.label :display_name, "Display Name", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+        <%= f.text_field :display_name, placeholder: "e.g. Alex Henderson", class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+      </div>
+
+      <div>
+        <%= f.label :avatar_url, "Avatar Image URL", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+        <%= f.url_field :avatar_url, placeholder: "https://example.com/avatar.jpg", class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+        <p class="mt-1 text-xs text-slate-400">Leave blank to use your default Gravatar identicon.</p>
+      </div>
+
+      <div>
+        <%= f.label :bio, "Biography", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+        <%= f.text_area :bio, rows: 4, placeholder: "Brief bio about your technical interests or background...", class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :location, "Location", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+          <%= f.text_field :location, placeholder: "e.g. San Francisco, CA", class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+        </div>
+
+        <div>
+          <%= f.label :website, "Website / Portfolio", class: "block text-sm font-bold text-slate-900 dark:text-white mb-1.5" %>
+          <%= f.url_field :website, placeholder: "https://yourwebsite.com", class: "w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-800 dark:bg-slate-900 dark:text-white" %>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+        <%= link_to "Change Password / Security", edit_user_registration_path, class: "text-xs font-semibold text-indigo-600 hover:underline" %>
+        <div class="flex items-center gap-2">
+          <%= link_to "Cancel", user_profile_path(@user), class: "px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400" %>
+          <%= f.submit "Save Changes", class: "cursor-pointer rounded-xl bg-indigo-600 px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 transition" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,3 @@
+<%= turbo_stream.replace dom_id(@discussion, :subscribe_btn) do %>
+  <%= render "discussions/subscribe_button", discussion: @discussion, is_subscribed: @is_subscribed %>
+<% end %>

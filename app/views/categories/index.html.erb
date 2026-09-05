@@ -1,0 +1,59 @@
+<% content_for :title, "Categories" %>
+
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-white/8">
+    <div>
+      <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 mb-2">
+        <span class="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+        <span>Directory Index</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">Community Categories</h1>
+      <p class="mt-1 text-sm text-zinc-400">Browse technical discussions categorized across engineering domains.</p>
+    </div>
+    
+    <div class="glow-border-wrapper rounded-xl self-start">
+      <%= link_to new_discussion_path, class: "relative z-10 inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-4 py-2 text-xs font-bold text-white border border-white/10 hover:bg-zinc-900 transition" do %>
+        <svg class="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        <span>New Discussion</span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @categories.each do |category| %>
+      <div class="card-glass relative flex flex-col justify-between rounded-2xl p-6 group transition-all duration-300">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 shadow-inner" style="background-color: <%= category.color_accent %>15; border-color: <%= category.color_accent %>40;">
+              <span class="font-mono text-base font-extrabold" style="color: <%= category.color_accent %>;">#</span>
+            </div>
+            <span class="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-zinc-800/80 text-zinc-300 border border-white/5">
+              <%= pluralize(category.discussions_count, "thread") %>
+            </span>
+          </div>
+
+          <h2 class="text-lg font-bold text-white group-hover:text-indigo-300 transition tracking-tight">
+            <%= link_to category.name, category_path(category) %>
+          </h2>
+
+          <p class="mt-2 text-xs sm:text-sm text-zinc-400 line-clamp-2 leading-relaxed">
+            <%= category.description.presence || "Explore discussions, architecture debates, and code snippets related to #{category.name}." %>
+          </p>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-white/6 flex items-center justify-between text-xs text-zinc-400">
+          <% latest = category.latest_discussion %>
+          <% if latest %>
+            <span class="truncate max-w-45 text-zinc-400">Latest: <%= link_to latest.title, discussion_path(latest), class: "text-zinc-300 hover:text-indigo-400 font-medium" %></span>
+          <% else %>
+            <span class="text-zinc-600 font-mono text-[11px]">No discussions yet</span>
+          <% end %>
+          <%= link_to category_path(category), class: "font-bold text-xs text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition" do %>
+            <span>Explore</span>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

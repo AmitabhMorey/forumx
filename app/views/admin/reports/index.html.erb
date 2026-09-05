@@ -1,0 +1,65 @@
+<% content_for :title, "Report Queue" %>
+
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Reports Review Queue</h1>
+      <p class="text-sm text-slate-500">Examine user-flagged content for spam, abuse, and community guideline violations.</p>
+    </div>
+  </div>
+
+  <!-- Status Filter Tabs -->
+  <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-sm font-medium">
+    <%= link_to "Pending", admin_reports_path(status: "pending"), class: "px-3 py-1.5 rounded-lg transition #{@status == 'pending' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <%= link_to "Resolved", admin_reports_path(status: "resolved"), class: "px-3 py-1.5 rounded-lg transition #{@status == 'resolved' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+    <%= link_to "Dismissed", admin_reports_path(status: "dismissed"), class: "px-3 py-1.5 rounded-lg transition #{@status == 'dismissed' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'}" %>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <table class="w-full text-left text-sm">
+      <thead class="bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+        <tr>
+          <th class="px-6 py-3">Reason</th>
+          <th class="px-6 py-3">Target</th>
+          <th class="px-6 py-3">Reporter</th>
+          <th class="px-6 py-3">Reported At</th>
+          <th class="px-6 py-3">Status</th>
+          <th class="px-6 py-3 text-right">Review</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        <% @reports.each do |report| %>
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+            <td class="px-6 py-4">
+              <span class="rounded bg-rose-100 px-2 py-0.5 text-xs font-bold text-rose-700 dark:bg-rose-950 dark:text-rose-300"><%= report.reason %></span>
+              <% if report.description.present? %>
+                <p class="text-xs text-slate-500 mt-1 line-clamp-1 italic">"<%= report.description %>"</p>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-xs font-medium">
+              <span class="font-bold text-slate-800 dark:text-slate-200"><%= report.reportable_type %></span> #<%= report.reportable_id %>
+            </td>
+            <td class="px-6 py-4 text-xs">
+              @<%= report.reporter.username %>
+            </td>
+            <td class="px-6 py-4 text-xs text-slate-400">
+              <%= time_ago_in_words(report.created_at) %> ago
+            </td>
+            <td class="px-6 py-4">
+              <span class="rounded px-2 py-0.5 text-xs font-bold capitalize <%= report.pending? ? 'bg-amber-100 text-amber-800' : (report.resolved? ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700') %>">
+                <%= report.status %>
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <%= link_to "Review →", admin_report_path(report), class: "rounded-lg bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-300" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+      <%= paginate @reports %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,238 @@
+<% content_for :title, @discussion.title %>
+
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <!-- Breadcrumbs -->
+  <nav class="flex items-center gap-2 text-xs text-zinc-500 mb-6 font-mono" aria-label="Breadcrumb">
+    <%= link_to "Home", root_path, class: "hover:text-zinc-200 transition" %>
+    <span>/</span>
+    <%= link_to "Categories", categories_path, class: "hover:text-zinc-200 transition" %>
+    <span>/</span>
+    <%= link_to @discussion.category.name, category_path(@discussion.category), class: "hover:text-zinc-200 transition text-zinc-400 font-semibold" %>
+    <span>/</span>
+    <span class="truncate max-w-50 text-zinc-200 font-medium"><%= @discussion.title %></span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Main Content Column -->
+    <div class="lg:col-span-3 space-y-8">
+      <!-- Main Discussion Post -->
+      <article class="card-glass rounded-3xl p-6 sm:p-8 relative">
+        <!-- Header Info -->
+        <div class="flex flex-wrap items-center gap-2 mb-3.5">
+          <%= link_to category_path(@discussion.category), class: "inline-flex items-center gap-1.5 rounded-md px-2.5 py-0.5 text-xs font-semibold border border-white/10", style: "background-color: #{@discussion.category.color_accent}12; color: #{@discussion.category.color_accent};" do %>
+            <span class="h-1.5 w-1.5 rounded-full" style="background-color: <%= @discussion.category.color_accent %>; box-shadow: 0 0 6px <%= @discussion.category.color_accent %>;"></span>
+            <%= @discussion.category.name %>
+          <% end %>
+
+          <div id="discussion-status-badge">
+            <% if @discussion.resolved? %>
+              <span class="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 border border-emerald-500/25">
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Solved
+              </span>
+            <% end %>
+          </div>
+
+          <% if @discussion.pinned? %>
+            <span class="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-400 border border-amber-500/20">
+              <svg class="h-3.5 w-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
+              Pinned
+            </span>
+          <% end %>
+
+          <% if @discussion.locked? %>
+            <span class="inline-flex items-center gap-1 rounded-md bg-zinc-800 px-2.5 py-0.5 text-xs font-semibold text-zinc-400 border border-white/5">
+              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              Locked
+            </span>
+          <% end %>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight tracking-tight mb-4">
+          <%= @discussion.title %>
+        </h1>
+
+        <!-- Author & Meta Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/8">
+          <div class="flex items-center gap-3">
+            <img src="<%= @discussion.user.avatar_display_url %>" alt="<%= @discussion.user.username %>" class="h-10 w-10 rounded-full object-cover border border-white/10">
+            <div>
+              <div class="flex items-center gap-2">
+                <%= link_to user_profile_path(@discussion.user), class: "font-bold text-sm text-white hover:text-indigo-300 transition" do %>
+                  <%= @discussion.user.display_title %>
+                <% end %>
+                <span class="text-xs text-zinc-500 font-mono">@<%= @discussion.user.username %></span>
+                <% if @discussion.user.can_moderate? %>
+                  <span class="rounded bg-amber-500/10 px-1.5 py-0.2 text-[10px] font-bold text-amber-400 border border-amber-500/20 uppercase tracking-wider"><%= @discussion.user.role %></span>
+                <% end %>
+              </div>
+              <p class="text-xs text-zinc-400">
+                Posted <%= time_ago_in_words(@discussion.created_at) %> ago • <span class="font-mono"><%= @discussion.view_count %> views</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Interaction buttons: Bookmark, Subscribe -->
+          <div class="flex items-center gap-2">
+            <%= render "discussions/bookmark_button", discussion: @discussion, is_bookmarked: @is_bookmarked %>
+            <%= render "discussions/subscribe_button", discussion: @discussion, is_subscribed: @is_subscribed %>
+          </div>
+        </div>
+
+        <!-- Discussion Body Layout: Left Vote Controls + Body -->
+        <div class="mt-6 flex items-start gap-6">
+          <div class="shrink-0 pt-1">
+            <%= render "discussions/vote_controls", voteable: @discussion %>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="prose dark:prose-invert max-w-none text-zinc-200 leading-relaxed font-normal">
+              <%= render_markdown(@discussion.body) %>
+            </div>
+
+            <!-- Tags -->
+            <div class="mt-8 flex flex-wrap items-center gap-1.5 pt-4 border-t border-white/6">
+              <% @discussion.tags.each do |tag| %>
+                <%= link_to tag_path(tag), class: "inline-flex items-center rounded-md bg-zinc-800/80 px-2.5 py-1 text-xs font-mono text-zinc-300 hover:text-white border border-white/5 hover:border-white/15 transition" do %>
+                  #<%= tag.name %>
+                <% end %>
+              <% end %>
+            </div>
+
+            <!-- Bottom Actions Bar: Edit / Delete / Report / Moderator Actions -->
+            <div class="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/6 text-xs">
+              <div class="flex items-center gap-3">
+                <% if policy(@discussion).edit? %>
+                  <%= link_to "Edit", edit_discussion_path(@discussion), class: "font-semibold text-zinc-400 hover:text-white transition" %>
+                <% end %>
+
+                <% if policy(@discussion).destroy? %>
+                  <%= button_to "Delete", discussion_path(@discussion), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this discussion?" }, class: "font-semibold text-rose-400 hover:text-rose-300 transition" %>
+                <% end %>
+
+                <% if user_signed_in? && current_user.id != @discussion.user_id %>
+                  <%= link_to "Report", new_report_path(reportable_type: "Discussion", reportable_id: @discussion.id), class: "font-semibold text-zinc-500 hover:text-amber-400 transition" %>
+                <% end %>
+              </div>
+
+              <!-- Moderator Quick Toolbar -->
+              <% if current_user&.can_moderate? %>
+                <div class="flex items-center gap-1.5 bg-zinc-800/90 px-2.5 py-1.5 rounded-xl border border-white/10">
+                  <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider font-mono">Mod:</span>
+                  <% if @discussion.locked? %>
+                    <%= button_to "Unlock", unlock_discussion_path(@discussion), method: :post, class: "px-2 py-0.5 rounded bg-zinc-700 text-emerald-400 font-semibold text-xs hover:bg-zinc-600 transition" %>
+                  <% else %>
+                    <%= button_to "Lock", lock_discussion_path(@discussion), method: :post, class: "px-2 py-0.5 rounded bg-zinc-700 text-zinc-300 font-semibold text-xs hover:text-amber-400 hover:bg-zinc-600 transition" %>
+                  <% end %>
+
+                  <% if @discussion.pinned? %>
+                    <%= button_to "Unpin", unpin_discussion_path(@discussion), method: :post, class: "px-2 py-0.5 rounded bg-zinc-700 text-zinc-300 font-semibold text-xs hover:bg-zinc-600 transition" %>
+                  <% else %>
+                    <%= button_to "Pin", pin_discussion_path(@discussion), method: :post, class: "px-2 py-0.5 rounded bg-zinc-700 text-zinc-300 font-semibold text-xs hover:text-amber-400 hover:bg-zinc-600 transition" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Replies Section -->
+      <section class="space-y-6">
+        <div class="flex items-center justify-between border-b border-white/8 pb-3">
+          <h2 id="replies-count" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <span>Replies</span>
+            <span class="font-mono rounded-full bg-zinc-800 px-2.5 py-0.5 text-xs text-zinc-300 border border-white/5">
+              <%= @discussion.reply_count %>
+            </span>
+          </h2>
+        </div>
+
+        <!-- Root Reply Composer -->
+        <% if @discussion.locked? %>
+          <div class="card-glass rounded-2xl border-amber-500/30 bg-amber-500/5 p-4 text-center text-sm font-semibold text-amber-300">
+            🔒 This discussion has been locked by a moderator. No new replies can be added.
+          </div>
+        <% elsif user_signed_in? %>
+          <%= render "replies/form", discussion: @discussion, reply: @new_reply %>
+        <% else %>
+          <div class="card-glass rounded-2xl p-6 text-center">
+            <p class="text-sm text-zinc-300">Join the discussion to share your answer or perspective.</p>
+            <div class="mt-4 flex items-center justify-center gap-3">
+              <%= link_to "Sign In", new_user_session_path, class: "rounded-xl border border-white/10 px-4 py-2 text-xs font-bold text-zinc-200 hover:bg-white/5 transition" %>
+              <div class="glow-border-wrapper rounded-xl">
+                <%= link_to "Create Account", new_user_registration_path, class: "relative z-10 rounded-xl bg-zinc-950 px-4 py-2 text-xs font-bold text-white border border-white/10 hover:bg-zinc-900 transition" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Replies List Container -->
+        <div id="replies-list" class="space-y-4">
+          <% if @replies.any? %>
+            <% @replies.each do |reply| %>
+              <%= render "replies/reply", reply: reply, discussion: @discussion %>
+            <% end %>
+          <% else %>
+            <div class="rounded-2xl border border-dashed border-white/10 p-8 text-center text-sm text-zinc-500">
+              No replies yet. Be the first to provide an answer!
+            </div>
+          <% end %>
+        </div>
+      </section>
+    </div>
+
+    <!-- Related & Author Sidebar -->
+    <div class="space-y-6">
+      <!-- Author Profile Card -->
+      <div class="card-glass rounded-2xl p-5">
+        <h3 class="font-bold text-[11px] font-mono text-zinc-400 uppercase tracking-wider pb-3 border-b border-white/8">About the Author</h3>
+        <div class="mt-4 flex items-center gap-3">
+          <img src="<%= @discussion.user.avatar_display_url %>" alt="<%= @discussion.user.username %>" class="h-11 w-11 rounded-full object-cover border border-white/10">
+          <div>
+            <h4 class="font-bold text-sm text-white leading-tight">
+              <%= link_to @discussion.user.display_title, user_profile_path(@discussion.user), class: "hover:text-indigo-300 transition" %>
+            </h4>
+            <p class="text-xs text-zinc-400 font-mono">@<%= @discussion.user.username %></p>
+            <div class="mt-1 flex items-center gap-2 text-xs font-medium text-amber-400 font-mono">
+              <span>⭐ <%= @discussion.user.reputation %> rep</span>
+            </div>
+          </div>
+        </div>
+
+        <% if @discussion.user.bio.present? %>
+          <p class="mt-3 text-xs text-zinc-400 leading-relaxed">
+            <%= @discussion.user.bio %>
+          </p>
+        <% end %>
+
+        <div class="mt-4 pt-3 border-t border-white/6 flex justify-between text-xs font-mono text-zinc-400">
+          <span><%= pluralize(@discussion.user.discussions_count, "discussion") %></span>
+          <span><%= pluralize(@discussion.user.replies_count, "reply") %></span>
+        </div>
+      </div>
+
+      <!-- Related Discussions in Same Category -->
+      <div class="card-glass rounded-2xl p-5">
+        <h3 class="font-bold text-[11px] font-mono text-zinc-400 uppercase tracking-wider pb-3 border-b border-white/8">Related in <%= @discussion.category.name %></h3>
+        <div class="mt-3 space-y-3">
+          <% if @related_discussions.any? %>
+            <% @related_discussions.each do |related| %>
+              <div class="text-xs">
+                <%= link_to related.title, discussion_path(related), class: "font-semibold text-zinc-300 hover:text-indigo-300 line-clamp-2 leading-snug transition" %>
+                <div class="mt-1 flex items-center gap-2 font-mono text-zinc-500 text-[11px]">
+                  <span><%= pluralize(related.reply_count, "reply") %></span>
+                  <span>•</span>
+                  <span><%= related.vote_score %> votes</span>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-xs text-zinc-500">No other discussions in this category yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

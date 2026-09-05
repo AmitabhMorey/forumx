@@ -1,0 +1,49 @@
+<% content_for :title, "Moderation Logs" %>
+
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Moderation Audit Logs</h1>
+    <p class="text-sm text-slate-500">Chronological, tamper-evident audit record of every moderator action on the platform.</p>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <table class="w-full text-left text-sm">
+      <thead class="bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+        <tr>
+          <th class="px-6 py-3">Timestamp</th>
+          <th class="px-6 py-3">Moderator</th>
+          <th class="px-6 py-3">Action</th>
+          <th class="px-6 py-3">Target</th>
+          <th class="px-6 py-3">Reason / Context</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-xs">
+        <% @logs.each do |log| %>
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition font-sans">
+            <td class="px-6 py-4 text-xs text-slate-400 font-mono">
+              <%= log.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
+            </td>
+            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">
+              @<%= log.moderator.username %>
+            </td>
+            <td class="px-6 py-4">
+              <span class="rounded bg-indigo-50 px-2 py-0.5 text-xs font-mono font-bold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                <%= log.action %>
+              </span>
+            </td>
+            <td class="px-6 py-4 text-xs font-medium text-slate-600 dark:text-slate-300">
+              <%= log.target_type %> #<%= log.target_id %>
+            </td>
+            <td class="px-6 py-4 text-xs text-slate-500 max-w-sm truncate">
+              <%= log.reason.presence || "No reason provided" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+      <%= paginate @logs %>
+    </div>
+  </div>
+</div>

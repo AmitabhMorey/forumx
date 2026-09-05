@@ -1,0 +1,12 @@
+<% content_for :title, "Edit Category: #{@category.name}" %>
+
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Edit Category: <%= @category.name %></h1>
+    <p class="text-sm text-slate-500">Update naming, accent styling, and description.</p>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <%= render "form", category: @category %>
+  </div>
+</div>

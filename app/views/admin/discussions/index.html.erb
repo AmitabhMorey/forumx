@@ -1,0 +1,90 @@
+<% content_for :title, "Manage Discussions" %>
+
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Discussion Moderation</h1>
+      <p class="text-sm text-slate-500">Lock, pin, archive, and audit discussions across all categories.</p>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <%= form_with url: admin_discussions_path, method: :get, local: true, class: "flex flex-col sm:flex-row gap-3" do |f| %>
+      <div class="flex-1">
+        <%= f.text_field :q, value: params[:q], placeholder: "Search discussion title...", class: "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-800 dark:text-white" %>
+      </div>
+
+      <div class="w-40">
+        <%= f.select :status, [["All Statuses", ""], ["Open", "open"], ["Locked", "locked"], ["Resolved", "resolved"], ["Archived", "archived"]], { selected: params[:status] }, class: "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-800 dark:text-white" %>
+      </div>
+
+      <%= f.submit "Filter", class: "cursor-pointer rounded-xl bg-indigo-600 px-5 py-2 text-sm font-bold text-white hover:bg-indigo-700" %>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs dark:border-slate-800 dark:bg-slate-900">
+    <table class="w-full text-left text-sm">
+      <thead class="bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
+        <tr>
+          <th class="px-6 py-3">Title</th>
+          <th class="px-6 py-3">Category</th>
+          <th class="px-6 py-3">Author</th>
+          <th class="px-6 py-3">Status</th>
+          <th class="px-6 py-3">Metrics</th>
+          <th class="px-6 py-3 text-right">Moderation</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        <% @discussions.each do |disc| %>
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+            <td class="px-6 py-4">
+              <div class="max-w-xs">
+                <%= link_to disc.title, discussion_path(disc), class: "font-bold text-slate-900 dark:text-white hover:text-indigo-600 line-clamp-1" %>
+                <span class="text-xs text-slate-400">Created <%= time_ago_in_words(disc.created_at) %> ago</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-xs font-medium">
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded" style="background-color: <%= disc.category.color_accent %>15; color: <%= disc.category.color_accent %>;">
+                <%= disc.category.name %>
+              </span>
+            </td>
+            <td class="px-6 py-4 text-xs font-semibold">
+              @<%= disc.user.username %>
+            </td>
+            <td class="px-6 py-4">
+              <span class="rounded px-2 py-0.5 text-xs font-bold capitalize <%= disc.resolved? ? 'bg-emerald-100 text-emerald-800' : (disc.locked? ? 'bg-amber-100 text-amber-800' : (disc.archived? ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700')) %>">
+                <%= disc.status %>
+              </span>
+            </td>
+            <td class="px-6 py-4 text-xs text-slate-500">
+              <%= disc.vote_score %> votes • <%= disc.reply_count %> replies
+            </td>
+            <td class="px-6 py-4 text-right space-x-1 whitespace-nowrap">
+              <% if disc.locked? %>
+                <%= button_to "Unlock", unlock_admin_discussion_path(disc), method: :post, class: "inline-block px-2 py-1 text-xs rounded bg-slate-100 text-emerald-600 font-semibold" %>
+              <% else %>
+                <%= button_to "Lock", lock_admin_discussion_path(disc), method: :post, class: "inline-block px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 font-semibold hover:text-amber-600" %>
+              <% end %>
+
+              <% if disc.pinned? %>
+                <%= button_to "Unpin", unpin_admin_discussion_path(disc), method: :post, class: "inline-block px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 font-semibold" %>
+              <% else %>
+                <%= button_to "Pin", pin_admin_discussion_path(disc), method: :post, class: "inline-block px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 font-semibold" %>
+              <% end %>
+
+              <% if disc.archived? %>
+                <%= button_to "Restore", restore_admin_discussion_path(disc), method: :post, class: "inline-block px-2 py-1 text-xs rounded bg-emerald-50 text-emerald-600 font-semibold" %>
+              <% else %>
+                <%= button_to "Archive", admin_discussion_path(disc), method: :delete, data: { turbo_confirm: "Archive this discussion?" }, class: "inline-block px-2 py-1 text-xs rounded bg-rose-50 text-rose-600 font-semibold" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+      <%= paginate @discussions %>
+    </div>
+  </div>
+</div>

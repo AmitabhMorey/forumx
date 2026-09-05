@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full antialiased">
+  <head>
+    <title><%= content_for(:title) ? "#{yield(:title)} | Admin - ForumX" : "Admin Center - ForumX" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="flex min-h-full bg-slate-100 font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <!-- Admin Sidebar -->
+    <aside class="w-64 shrink-0 bg-slate-900 text-white flex flex-col justify-between p-4 border-r border-slate-800">
+      <div>
+        <div class="flex items-center gap-2.5 px-3 py-4 border-b border-slate-800">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-white font-black">X</div>
+          <div>
+            <h1 class="font-bold text-base leading-tight">Admin Center</h1>
+            <p class="text-xs text-slate-400">Moderation & Platform</p>
+          </div>
+        </div>
+
+        <nav class="mt-6 space-y-1 text-sm font-medium">
+          <%= link_to admin_root_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if current_page?(admin_root_path)}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard
+          <% end %>
+
+          <%= link_to admin_statistics_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if current_page?(admin_statistics_path)}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Statistics
+          <% end %>
+
+          <%= link_to admin_reports_path, class: "flex items-center justify-between px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if request.path.start_with?('/admin/reports')}" do %>
+            <div class="flex items-center gap-3">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <span>Reports</span>
+            </div>
+            <% pending_count = Report.pending.count %>
+            <% if pending_count > 0 %>
+              <span class="rounded-full bg-rose-500/20 px-2 py-0.5 text-xs font-bold text-rose-300 border border-rose-500/30"><%= pending_count %></span>
+            <% end %>
+          <% end %>
+
+          <%= link_to admin_users_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if request.path.start_with?('/admin/users')}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Users
+          <% end %>
+
+          <%= link_to admin_categories_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if request.path.start_with?('/admin/categories')}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Categories
+          <% end %>
+
+          <%= link_to admin_discussions_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if request.path.start_with?('/admin/discussions')}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Discussions
+          <% end %>
+
+          <%= link_to admin_replies_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if request.path.start_with?('/admin/replies')}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+            Replies
+          <% end %>
+
+          <%= link_to admin_moderation_logs_path, class: "flex items-center gap-3 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition #{'bg-indigo-600/20 text-indigo-400 font-semibold border-l-2 border-indigo-500' if request.path.start_with?('/admin/moderation_logs')}" do %>
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            Moderation Logs
+          <% end %>
+        </nav>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800">
+        <%= link_to root_path, class: "flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition" do %>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to Public Forum
+        <% end %>
+      </div>
+    </aside>
+
+    <!-- Admin Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8">
+        <div class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          Admin Portal • ForumX
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 uppercase dark:bg-indigo-950 dark:text-indigo-300">
+            <%= current_user.role %>
+          </span>
+          <span class="text-sm font-semibold">@<%= current_user.username %></span>
+        </div>
+      </header>
+
+      <main class="p-8">
+        <%= render "shared/flash" %>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

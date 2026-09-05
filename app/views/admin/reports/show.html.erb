@@ -1,0 +1,67 @@
+<% content_for :title, "Review Report ##{@report.id}" %>
+
+<div class="space-y-6 max-w-3xl">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Report #<%= @report.id %> Review</h1>
+      <p class="text-sm text-slate-500">Submitted <%= time_ago_in_words(@report.created_at) %> ago by @<%= @report.reporter.username %></p>
+    </div>
+    <%= link_to "← Back to Queue", admin_reports_path, class: "text-xs font-semibold text-slate-500 hover:text-slate-900" %>
+  </div>
+
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900 space-y-6">
+    <div>
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Reported Category Reason</span>
+      <p class="mt-1 text-base font-bold text-rose-600"><%= @report.reason %></p>
+      <% if @report.description.present? %>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl italic">
+          "<%= @report.description %>"
+        </p>
+      <% end %>
+    </div>
+
+    <!-- Reported Target Content -->
+    <div class="border-t border-slate-100 dark:border-slate-800 pt-4">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Content: <%= @report.reportable_type %> #<%= @report.reportable_id %></span>
+
+      <div class="mt-2 p-4 rounded-xl border border-slate-200 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/40">
+        <% if @report.reportable.is_a?(Discussion) %>
+          <h3 class="font-bold text-base text-slate-900 dark:text-white"><%= @report.reportable.title %></h3>
+          <p class="text-xs text-slate-400 mb-2">Author: @<%= @report.reportable.user.username %></p>
+          <div class="text-sm text-slate-700 dark:text-slate-300">
+            <%= @report.reportable.body %>
+          </div>
+          <div class="mt-4">
+            <%= link_to "View full discussion page →", discussion_path(@report.reportable), target: "_blank", class: "text-xs font-bold text-indigo-600 hover:underline" %>
+          </div>
+        <% elsif @report.reportable.is_a?(Reply) %>
+          <p class="text-xs text-slate-400 mb-2">Author: @<%= @report.reportable.user.username %> on discussion: <%= link_to @report.reportable.discussion.title, discussion_path(@report.reportable.discussion), class: "text-indigo-600 hover:underline" %></p>
+          <div class="text-sm text-slate-700 dark:text-slate-300">
+            <%= @report.reportable.body %>
+          </div>
+        <% elsif @report.reportable.is_a?(User) %>
+          <div class="flex items-center gap-3">
+            <img src="<%= @report.reportable.avatar_display_url %>" class="h-10 w-10 rounded-full object-cover">
+            <div>
+              <p class="font-bold text-sm">@<%= @report.reportable.username %></p>
+              <p class="text-xs text-slate-500"><%= @report.reportable.bio %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Reviewer Decisions -->
+    <div class="border-t border-slate-100 dark:border-slate-800 pt-4 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-semibold text-slate-400">Current Status: </span>
+        <span class="text-xs font-bold capitalize <%= @report.pending? ? 'text-amber-600' : (@report.resolved? ? 'text-emerald-600' : 'text-slate-500') %>"><%= @report.status %></span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= button_to "Dismiss Report", dismiss_admin_report_path(@report), method: :post, class: "rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" %>
+        <%= button_to "Resolve & Apply Action", resolve_admin_report_path(@report), method: :post, class: "rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700" %>
+      </div>
+    </div>
+  </div>
+</div>

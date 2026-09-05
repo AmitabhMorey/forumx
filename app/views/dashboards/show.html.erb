@@ -1,0 +1,94 @@
+<% content_for :title, "Dashboard" %>
+
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">User Dashboard</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Manage your discussions, replies, reputation progress, and bookmarks.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= link_to new_discussion_path, class: "inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition" do %>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        <span>New Discussion</span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Metric Overview Cards -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reputation</span>
+      <p class="mt-1 text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400">⭐ <%= current_user.reputation %></p>
+      <p class="mt-1 text-xs text-slate-400">Community karma</p>
+    </div>
+
+    <%= link_to my_discussions_path, class: "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 transition" do %>
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">My Discussions</span>
+      <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white"><%= current_user.discussions_count %></p>
+      <p class="mt-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold">View list →</p>
+    <% end %>
+
+    <%= link_to my_replies_path, class: "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 transition" do %>
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">My Replies</span>
+      <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white"><%= current_user.replies_count %></p>
+      <p class="mt-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold">View replies →</p>
+    <% end %>
+
+    <%= link_to bookmarks_path, class: "rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 transition" do %>
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Bookmarks</span>
+      <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white"><%= @bookmarked_count %></p>
+      <p class="mt-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Saved items →</p>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Recent Discussions -->
+    <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <h2 class="font-bold text-base text-slate-900 dark:text-white">Recent Discussions Created</h2>
+        <%= link_to "View all", my_discussions_path, class: "text-xs font-semibold text-indigo-600 dark:text-indigo-400" %>
+      </div>
+
+      <div class="mt-4 space-y-3">
+        <% if @recent_discussions.any? %>
+          <% @recent_discussions.each do |disc| %>
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60">
+              <div class="min-w-0 pr-3">
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white truncate">
+                  <%= link_to disc.title, discussion_path(disc), class: "hover:text-indigo-600" %>
+                </h3>
+                <p class="text-xs text-slate-400"><%= disc.category.name %> • <%= pluralize(disc.reply_count, "reply") %></p>
+              </div>
+              <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400"><%= disc.vote_score %> votes</span>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-xs text-slate-400 text-center py-4">You haven't posted any discussions yet.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Replies -->
+    <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <h2 class="font-bold text-base text-slate-900 dark:text-white">Recent Replies Authored</h2>
+        <%= link_to "View all", my_replies_path, class: "text-xs font-semibold text-indigo-600 dark:text-indigo-400" %>
+      </div>
+
+      <div class="mt-4 space-y-3">
+        <% if @recent_replies.any? %>
+          <% @recent_replies.each do |rep| %>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60">
+              <p class="text-xs text-slate-400 mb-1">
+                On: <%= link_to rep.discussion.title, discussion_path(rep.discussion), class: "font-semibold text-slate-800 hover:text-indigo-600 dark:text-slate-200" %>
+              </p>
+              <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-1"><%= rep.body %></p>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-xs text-slate-400 text-center py-4">You haven't posted any replies yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<% user_vote = current_user ? current_user.vote_for(voteable)&.value : 0 %>
+<% is_owner = current_user && voteable.user_id == current_user.id %>
+
+<div id="<%= dom_id(voteable, :votes) %>" class="flex flex-col items-center justify-center p-1 rounded-xl bg-zinc-900/80 border border-white/8 hover:border-white/18 transition-all backdrop-blur-md shrink-0 shadow-sm">
+  <!-- Upvote Button -->
+  <% if user_signed_in? && !is_owner %>
+    <%= button_to vote_path(voteable_type: voteable.class.name, voteable_id: voteable.id, value: 1),
+                  method: :post,
+                  class: "p-1.5 rounded-lg transition-all duration-150 active:scale-90 #{user_vote == 1 ? 'text-indigo-400 bg-indigo-500/20 font-bold shadow-[0_0_10px_rgba(99,102,241,0.3)]' : 'text-zinc-500 hover:text-indigo-400 hover:bg-white/[0.06]'}",
+                  aria: { label: "Upvote" } do %>
+      <svg class="h-4 w-4" fill="<%= user_vote == 1 ? 'currentColor' : 'none' %>" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
+      </svg>
+    <% end %>
+  <% else %>
+    <span class="p-1.5 text-zinc-700 cursor-not-allowed" title="<%= is_owner ? 'Cannot vote on own post' : 'Sign in to vote' %>">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+      </svg>
+    </span>
+  <% end %>
+
+  <!-- Vote Score -->
+  <span class="font-mono text-xs font-bold my-1 transition-colors <%= voteable.vote_score > 0 ? 'text-indigo-400' : (voteable.vote_score < 0 ? 'text-rose-400' : 'text-zinc-400') %>">
+    <%= voteable.vote_score %>
+  </span>
+
+  <!-- Downvote Button -->
+  <% if user_signed_in? && !is_owner %>
+    <%= button_to vote_path(voteable_type: voteable.class.name, voteable_id: voteable.id, value: -1),
+                  method: :post,
+                  class: "p-1.5 rounded-lg transition-all duration-150 active:scale-90 #{user_vote == -1 ? 'text-rose-400 bg-rose-500/20 font-bold shadow-[0_0_10px_rgba(244,63,94,0.3)]' : 'text-zinc-500 hover:text-rose-400 hover:bg-white/[0.06]'}",
+                  aria: { label: "Downvote" } do %>
+      <svg class="h-4 w-4" fill="<%= user_vote == -1 ? 'currentColor' : 'none' %>" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+      </svg>
+    <% end %>
+  <% else %>
+    <span class="p-1.5 text-zinc-700 cursor-not-allowed" title="<%= is_owner ? 'Cannot vote on own post' : 'Sign in to vote' %>">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </span>
+  <% end %>
+</div>

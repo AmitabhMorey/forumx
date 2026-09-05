@@ -1,0 +1,25 @@
+<% content_for :title, "My Bookmarks" %>
+
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Bookmarked Discussions</h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400">All discussion threads you have saved for future reference.</p>
+  </div>
+
+  <div class="space-y-3">
+    <% if @discussions.any? %>
+      <% @discussions.each do |discussion| %>
+        <%= render "discussions/discussion_card", discussion: discussion %>
+      <% end %>
+      <div class="mt-8 flex justify-center">
+        <%= paginate @discussions %>
+      </div>
+    <% else %>
+      <%= render "shared/empty_state",
+                 title: "You haven't bookmarked anything yet",
+                 message: "Save important discussions and solutions to quickly find them later.",
+                 action_text: "Explore Discussions",
+                 action_url: discussions_path %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<% content_for :title, "Start a Discussion" %>
+
+<div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mb-6">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Start a New Discussion</h1>
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Ask a technical question or initiate a structured debate with the community.</p>
+  </div>
+
+  <div class="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <%= render "form", discussion: @discussion %>
+  </div>
+</div>

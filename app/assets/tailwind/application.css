@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* ==========================================================================
+   Aceternity UI & Uiverse.io Design Utilities
+   ========================================================================== */
+
+/* Ambient Dot & Grid Background Patterns */
+.bg-grid-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-radial-spotlight {
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.05) 50%, transparent 80%);
+}
+
+.bg-emerald-spotlight {
+  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12), transparent 70%);
+}
+
+/* Turbo Radiant Loading Bar */
+.turbo-progress-bar {
+  height: 3px !important;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899) !important;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.8) !important;
+}
+
+/* Aceternity Shimmer Button */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(110deg, #18181b 45%, #27272a 55%, #18181b);
+  background-size: 200% 100%;
+  animation: shimmer 3.5s infinite linear;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.btn-shimmer:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-shimmer:active {
+  transform: scale(0.98);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Glowing Border CTA */
+.glow-border-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.glow-border-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  opacity: 0.65;
+  filter: blur(2px);
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.glow-border-wrapper:hover::before {
+  opacity: 1;
+}
+
+/* Glassmorphic Card Surfaces */
+.card-glass {
+  background: rgba(18, 18, 23, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-glass:hover {
+  background: rgba(24, 24, 30, 0.85);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.65), 0 0 16px rgba(99, 102, 241, 0.06);
+}
+
+/* Thread Hierarchy Vertical Connector */
+.thread-connector {
+  position: absolute;
+  left: 1.25rem;
+  top: 3.5rem;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
+}
