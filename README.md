@@ -134,12 +134,19 @@ bundle exec rubocop
 
 ## ☁️ Production Deployment on Render
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AmitabhMorey/forumx)
+
 FORUMX is turnkey-ready for **Render** using native Linux environments (strictly zero Docker).
 
-1. Connect your repository in the [Render Dashboard](https://dashboard.render.com).
-2. Deploy via **Render Blueprint** using the included [`render.yaml`](render.yaml).
-3. The automated [`bin/render-build.sh`](bin/render-build.sh) script will install gems, precompile assets, clean cache, and execute database migrations.
-4. Once deployed, open the Render Shell and run `bundle exec rails db:seed` to seed production data.
+1. Click the **Deploy to Render** button above or connect your repository in the [Render Blueprint Dashboard](https://dashboard.render.com/blueprints/new).
+2. Select your repository: `https://github.com/AmitabhMorey/forumx`.
+3. Render automatically reads the included [`render.yaml`](render.yaml) Blueprint to provision:
+   - **PostgreSQL Database** (`forumx-postgres`)
+   - **Redis Key-Value Cache** (`forumx-redis`)
+   - **Puma Web Service** (`forumx-web`)
+   - **Sidekiq Background Worker** (`forumx-sidekiq`)
+4. The automated [`bin/render-build.sh`](bin/render-build.sh) script will install gems, precompile Tailwind assets, clean cache, and execute database migrations automatically.
+5. Once deployed, run `bundle exec rails db:seed` in the Render Shell (or via Render CLI) to seed initial production data.
 
 For step-by-step instructions, see the [Render Deployment Guide](docs/deployment.md).
 
