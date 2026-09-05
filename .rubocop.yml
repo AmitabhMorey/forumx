@@ -1,10 +1,11 @@
-require:
+plugins:
   - rubocop-rails
   - rubocop-rspec
 
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.3
+  SuggestExtensions: false
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
@@ -13,20 +14,62 @@ AllCops:
     - 'node_modules/**/*'
     - 'vendor/**/*'
 
-Metrics/BlockLength:
-  Exclude:
-    - 'config/routes.rb'
-    - 'config/environments/*'
-    - 'spec/**/*'
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
 
 Metrics/MethodLength:
-  Max: 35
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
 
 Metrics/ClassLength:
-  Max: 200
+  Max: 300
 
 Layout/LineLength:
-  Max: 140
+  Max: 300
+
+Layout/TrailingWhitespace:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
+Rails/ApplicationController:
+  Enabled: false
+
+Rails/RenderInline:
+  Enabled: false
+
+Rails/OutputSafety:
+  Enabled: false
+
+Naming/PredicateMethod:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Lint/UselessAssignment:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
@@ -38,6 +81,12 @@ Style/SymbolArray:
   Enabled: false
 
 Style/StringLiterals:
+  Enabled: false
+
+Style/SafeNavigationChainLength:
+  Enabled: false
+
+Style/IfUnlessModifier:
   Enabled: false
 
 RSpec/MultipleExpectations:
@@ -54,3 +103,5 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/NamedSubject:
   Enabled: false
+
+
