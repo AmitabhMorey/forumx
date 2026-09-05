@@ -26,7 +26,7 @@ gem "sanitize"
 gem "kaminari"
 
 # Active Storage image processing
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.1"
 
 # Reduces boot times through caching
 gem "bootsnap", require: false
