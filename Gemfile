@@ -15,7 +15,7 @@ gem "devise"
 gem "pundit"
 
 # Background processing & Caching
-gem "redis", "~> 5.0"
+gem "redis", "~> 6.0"
 gem "sidekiq"
 
 # Markdown rendering & Sanitization
