@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "importmap-rails"
 gem "jbuilder"
-gem "pg", "~> 1.5"
+gem "pg", "~> 1.7"
 gem "propshaft"
 gem "puma", ">= 5.0"
 gem "rails", "~> 8.1.3", ">= 8.1.3.1"
